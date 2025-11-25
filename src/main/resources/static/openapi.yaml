@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: Health App API
+  version: 1.0.0
+servers:
+  - url: http://localhost:9090
+
+paths:
+  /api/ai/chat:
+    post:
+      operationId: chat
+      tags: [AIChat]
+      summary: Chat with AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              sample:
+                value:
+                  message: "요즘 스트레스 때문에 잠이 안와요"
+                  history:
+                    - role: assistant
+                      content: "안녕! 무엇을 도와줄까?"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+
+components:
+  schemas:
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant, system]
+        content:
+          type: string
+      required: [role, content]
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+      required: [message]
+    ChatResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+      required: [answer]
